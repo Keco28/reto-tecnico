@@ -1,0 +1,18 @@
+networks:
+  shared_network:
+    external: true
+
+services:
+  server:
+    image: pricing-server
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
+    ports:
+      - 8001:8001
+    environment:
+      - CATALOG_URL=${CATALOG_URL}
+    networks:
+      - shared_network
+
+##server:
+##    image: catalog-server
+##    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
