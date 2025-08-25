@@ -11,6 +11,20 @@ request_data = {
         "country": "CO"
     }
 
+def test_create_pricing_quote_request():
+    response = client.post("/pricing/quote", json=request_data)
+    assert response.status_code == 200
+    assert response.json()["total_discounted"] > 0
+    assert response.json()["currency"] in ["COP", "USD"]
+
+def test_create_pricing_quote_no_coupon_request():
+    data = request_data.copy()
+    data.pop("coupon")
+    response = client.post("/pricing/quote", json=data)
+    assert response.status_code == 200
+    assert response.json()["total_discounted"] == 0
+    assert response.json()["currency"] in ["COP", "USD"]
+
 def test_health_check_request():
     response = client.get("/pricing/health")
     assert response.status_code == 200
